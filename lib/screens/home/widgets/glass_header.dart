@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import '../../../widgets/glass_container.dart';
+import '../../../../core/utils/date_utils.dart';
+import '../../../../widgets/blur_container.dart';
 
 class GlassHeader extends StatelessWidget {
   const GlassHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final nepaliDate = DateUtilsNepali.getCurrentNepaliDate();
+
     return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: GlassContainer(
+      padding: const EdgeInsets.all(16.0),
+      child: BlurContainer(
+        blur: 15,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('२०७८ बैशाख', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-              Text('April 2025', style: TextStyle(fontSize: 16)),
+            children: [
+              Text(
+                '${DateUtilsNepali.getNepaliMonthName(nepaliDate['month'])} ${nepaliDate['year']}',
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'आज: ${nepaliDate['day']} गते',
+                style: const TextStyle(fontSize: 16),
+              ),
             ],
           ),
         ),
