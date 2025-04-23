@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../services/calendar_service.dart';
-import '../../event/event_details_screen.dart';
+import '../../../core/utils/date_utils.dart';
 
 class DateTile extends StatelessWidget {
   final int nepaliDay;
   final int gregorianDay;
   final bool isToday;
   final bool isCurrentMonth;
+  final bool isSaturday;
 
   const DateTile({
     super.key,
@@ -15,59 +15,44 @@ class DateTile extends StatelessWidget {
     required this.gregorianDay,
     required this.isToday,
     required this.isCurrentMonth,
+    required this.isSaturday,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-    final date = DateTime(2025, 1, nepaliDay); // Dummy logic
-    final events = CalendarService.getEventsForMonth(date.year, date.month)
-        .where((e) => e.date.day == date.day)
-        .toList();
-    final tithis = CalendarService.getTithisForMonth(date.year, date.month)
-        .where((t) => t.date.day == date.day)
-        .toList();
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => EventDetailsScreen(
-          date: date,
-          events: events,
-          tithis: tithis,
+    return Container(
+      decoration: BoxDecoration(
+        color: isToday ? Colors.blueAccent.withOpacity(0.2) : null,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: isCurrentMonth ? AppColors.gray : Colors.grey.shade300,
         ),
       ),
-    );
-  },
-      child: Container(
-        decoration: BoxDecoration(
-          color: isToday ? AppColors.greenLight : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isCurrentMonth ? AppColors.gray : Colors.grey.shade300,
-          ),
-        ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '$nepaliDay',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isCurrentMonth ? Colors.black : AppColors.gray,
-                ),
+      child: FittedBox(
+         fit: BoxFit.scaleDown,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              DateUtilsNepali.convertToNepaliNumber(nepaliDay.toString()),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color:
+                    isSaturday
+                        ? AppColors.red
+                        : (isCurrentMonth ? Colors.black : Colors.grey),
+                fontSize: 16,
               ),
-              Text(
-                '$gregorianDay',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              gregorianDay.toString(),
+              style: TextStyle(
+                fontSize: 12,
+                color: isCurrentMonth ? Colors.black : Colors.grey,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
